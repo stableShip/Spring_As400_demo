@@ -21,4 +21,8 @@ public class FileService {
         return this.fileDao.getAllFiles(customerId, type, page, limit);
     }
 
+    public Integer getFilesCount(String customerId, String type) {
+        return this.fileDao.getFilesCount(customerId, type);
+    }
+
 }

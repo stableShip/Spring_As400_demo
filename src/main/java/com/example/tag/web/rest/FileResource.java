@@ -30,10 +30,12 @@ public class FileResource {
         int page = (int) params.get("page");
         int limit = (int) params.get("limit");
         List files = this.fileService.getAllFiles(customerId, type, page, limit);
+        int total = this.fileService.getFilesCount(customerId, type);
         HashMap body = new HashMap();
         body.put("status", 200);
         HashMap data = new HashMap();
         data.put("files", files);
+        data.put("total", total);
         body.put("data", data);
         return new ResponseEntity(body, HttpStatus.OK);
     }
