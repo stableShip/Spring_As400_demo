@@ -7,11 +7,9 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.sql.SQLException;
 import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Repository
 public class FileDao {
@@ -70,5 +68,45 @@ public class FileDao {
         }
         int count = this.jdbcTemplate.queryForObject(sql, param, Integer.class);
         return count;
+    }
+
+
+    /**
+     * get Data
+     *
+     * @param custId
+     * @throws SQLException
+     * @throws ClassNotFoundException
+     * @throws InstantiationException
+     * @throws IllegalAccessException
+     */
+    public Map<String, List<Map<String, byte[]>>> getDataMap(String custId, String type) {
+        Map<String, List<Map<String, byte[]>>> map = new HashMap<String, List<Map<String, byte[]>>>();
+        StringBuffer sql = new StringBuffer();
+        sql.append(" select t.CORDCUSTID,t.CORDCRDATE,t.CORDCRTIME,t.CORDBLKNUM,t.CORDCORTXT from " + library + ".GCCORDP t inner join  ");
+        sql.append(" (select CORDCUSTID,CORDCRDATE,CORDCRTIME from " + library + ".GCCORDP where CORDCORTYP =  '" + type.trim() + "' and CORDCUSTID = '" + custId + "'ORDER BY " +
+                "CORDCRDATE DESC LIMIT 1 ) m on  ");
+        sql.append(" t.CORDCUSTID = m.CORDCUSTID and t.CORDCRDATE = m.CORDCRDATE and t.CORDCRTIME = m.CORDCRTIME ");
+
+        jdbcTemplate.query(new String(sql), rs -> {
+            List<Map<String, byte[]>> list;
+            String key = rs.getString("CORDCUSTID") + "-" + rs.getString("CORDCRDATE") + "-"
+                    + rs.getString("CORDCRTIME");
+            Map<String, byte[]> map1 = new TreeMap<String, byte[]>(new Comparator<String>() {
+                public int compare(String obj1, String obj2) {
+                    return obj1.compareTo(obj2);
+                }
+            });
+            if (map.containsKey(key)) {
+                list = map.get(key);
+                map1.put(rs.getString("CORDBLKNUM"), rs.getBytes("CORDCORTXT"));// CORDCORTXT
+            } else {
+                list = new ArrayList<Map<String, byte[]>>();
+                map1.put(rs.getString("CORDBLKNUM"), rs.getBytes("CORDCORTXT"));
+            }
+            list.add(map1);
+            map.put(key, list);
+        });
+        return map;
     }
 }

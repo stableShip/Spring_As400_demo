@@ -1,13 +1,15 @@
 package com.example.tag.web.rest;
 
-import com.example.tag.domain.File;
 import com.example.tag.servive.FileService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,6 +38,19 @@ public class FileResource {
         HashMap data = new HashMap();
         data.put("files", files);
         data.put("total", total);
+        body.put("data", data);
+        return new ResponseEntity(body, HttpStatus.OK);
+    }
+
+    @PostMapping("/files/rtf")
+    public ResponseEntity<Void> generateRTF(@RequestBody Map<String, Object> params) throws IOException {
+        String customerId = (String) params.get("customerId");
+        String type = (String) params.get("type");
+        String fileName = this.fileService.generateFile(customerId, type);
+        HashMap body = new HashMap();
+        body.put("status", 200);
+        HashMap data = new HashMap();
+        data.put("file", fileName);
         body.put("data", data);
         return new ResponseEntity(body, HttpStatus.OK);
     }

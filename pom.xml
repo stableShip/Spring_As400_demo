@@ -49,6 +49,12 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>com.hsbc.group.risk.wholesalecreditrisk.carm</groupId>
+            <artifactId>carm-ha</artifactId>
+            <version>1.26</version>
+        </dependency>
     </dependencies>
 
     <build>
