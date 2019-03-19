@@ -84,7 +84,7 @@ public class FileDao {
         Map<String, List<Map<String, byte[]>>> map = new HashMap<String, List<Map<String, byte[]>>>();
         StringBuffer sql = new StringBuffer();
         sql.append(" select t.CORDCUSTID,t.CORDCRDATE,t.CORDCRTIME,t.CORDBLKNUM,t.CORDCORTXT from " + library + ".GCCORDP t inner join  ");
-        sql.append(" (select CORDCUSTID,CORDCRDATE,CORDCRTIME from " + library + ".GCCORDP where CORDCORTYP =  '" + type.trim() + "' and CORDCUSTID = '" + custId + "'ORDER BY " +
+        sql.append(" (select CORDCUSTID,CORDCRDATE,CORDCRTIME from " + library + ".GCCORDP where CORDCORTYP =  '" + type.trim() + "' and CORDCUSTID = '" + custId + "' ORDER BY " +
                 "CORDCRDATE DESC LIMIT 1 ) m on  ");
         sql.append(" t.CORDCUSTID = m.CORDCUSTID and t.CORDCRDATE = m.CORDCRDATE and t.CORDCRTIME = m.CORDCRTIME ");
 

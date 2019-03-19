@@ -1,12 +1,27 @@
 package com.example.tag.util;
 
 import com.hsbc.carm.ha.WebAppComvert;
+import org.docx4j.jaxb.Context;
+import org.docx4j.openpackaging.contenttype.ContentType;
+import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
+import org.docx4j.openpackaging.parts.WordprocessingML.AltChunkType;
+import org.docx4j.openpackaging.parts.WordprocessingML.AlternativeFormatInputPart;
+import org.docx4j.openpackaging.parts.WordprocessingML.MainDocumentPart;
+import org.docx4j.openpackaging.parts.relationships.RelationshipsPart;
+import org.docx4j.relationships.Relationship;
+import org.docx4j.wml.CTAltChunk;
 
+import javax.swing.*;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.EditorKit;
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 import java.util.zip.GZIPInputStream;
+import java.util.zip.ZipException;
 
 public class RTFUtil {
 
@@ -53,9 +68,26 @@ public class RTFUtil {
             tempFileIn.close();
             // remove temp file
             tempFile.delete();
-            rtfName +=  key;
+            rtfName = destFile.getPath();
         }
         return rtfName;
+    }
+
+    public static String coverToHtml(Reader rtf) throws IOException, BadLocationException {
+        JEditorPane p = new JEditorPane();
+        p.setContentType("text/rtf");
+        EditorKit kitRtf = p.getEditorKitForContentType("text/rtf");
+        try {
+            kitRtf.read(rtf, p.getDocument(), 0);
+            kitRtf = null;
+            EditorKit kitHtml = p.getEditorKitForContentType("text/html");
+            Writer writer = new StringWriter();
+            kitHtml.write(writer, p.getDocument(), 0, p.getDocument().getLength());
+            return writer.toString();
+        } catch (BadLocationException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     /**
@@ -79,5 +111,30 @@ public class RTFUtil {
             out.close();
             in.close();
         }
+    }
+
+    public static void coverToDocx(String filePath, String outputPath) throws Exception {
+        WordprocessingMLPackage target = WordprocessingMLPackage.createPackage();
+        MainDocumentPart main = target.getMainDocumentPart();
+        byte[] bytes = Files.readAllBytes(Paths.get(filePath));
+        AlternativeFormatInputPart afiPart = new AlternativeFormatInputPart(AltChunkType.Rtf);
+        afiPart.setContentType(new ContentType("application/rtf"));
+        Relationship altChunkRel = main.addTargetPart(afiPart, RelationshipsPart.AddPartBehaviour.RENAME_IF_NAME_EXISTS);
+        afiPart.registerInContentTypeManager();
+        ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
+        byte[] byteArray;
+        try {
+            GZIPInputStream gzip = new GZIPInputStream(bais);
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            writeToOutputStream(gzip, baos, false);
+            byteArray = baos.toByteArray();
+        } catch (ZipException ex) {
+            byteArray = bytes;
+        }
+        afiPart.setBinaryData(byteArray);
+        CTAltChunk ac = Context.getWmlObjectFactory().createCTAltChunk();
+        ac.setId(altChunkRel.getId());
+        main.addObject(ac);
+        target.save(new File(outputPath));
     }
 }
