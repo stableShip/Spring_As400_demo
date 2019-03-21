@@ -8,6 +8,6 @@ import org.springframework.stereotype.Component;
 @Mapper
 @Component
 public interface TagMapper {
-    @Select("SELECT * FROM tag WHERE id=#{id}")
-    Tag select(int id);
+    @Select("SELECT * FROM tag")
+    Tag[] select(int id);
 }

@@ -26,7 +26,7 @@ public class TagResource {
 
     @PostMapping("/tags")
     public ResponseEntity<Void> getAllTags(@RequestBody Map<String, Object> params) {
-        Tag tag = this.tagService.getTagById(1);
+        Tag[] tag = this.tagService.getTag(1);
         HashMap body = new HashMap();
         body.put("status", 200);
         HashMap data = new HashMap();

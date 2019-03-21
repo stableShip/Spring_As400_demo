@@ -15,7 +15,7 @@ public class TagService {
         this.tagDao = dao;
     }
 
-    public Tag getTagById(int id) {
+    public Tag[] getTag(int id) {
         return tagDao.select(id);
     }
 
