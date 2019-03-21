@@ -2,6 +2,7 @@ package com.example.tag.reositories;
 
 import com.example.tag.domain.File;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -14,9 +15,10 @@ import java.util.*;
 @Repository
 public class FileDao {
     @Autowired
+    @Qualifier("as400JdbcTemplate")
     private NamedParameterJdbcTemplate jdbcTemplate;
 
-    @Value("${spring.datasource.library}")
+    @Value("${spring.datasource.as400.library}")
     private String library;
 
     public List<File> getAllFiles(String customerId, String type, int page, int size) {
