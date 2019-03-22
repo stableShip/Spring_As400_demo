@@ -17,4 +17,6 @@ public class File implements Serializable {
 
     private String cordcrTime;
 
+    private String status;
+
 }

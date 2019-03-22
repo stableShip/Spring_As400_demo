@@ -15,8 +15,8 @@ public class TagService {
         this.tagDao = dao;
     }
 
-    public Tag[] getTag(int id) {
-        return tagDao.select(id);
+    public Tag[] getTag(String customerId, String type, String date, String time) {
+        return tagDao.findAll(customerId, type, date, time);
     }
 
 }

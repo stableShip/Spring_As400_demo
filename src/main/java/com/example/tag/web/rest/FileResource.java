@@ -14,6 +14,7 @@ import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
@@ -30,8 +31,8 @@ public class FileResource {
     public ResponseEntity<Void> getAllFiles(@RequestBody Map<String, Object> params) {
         String customerId = (String) params.get("customerId");
         String type = (String) params.get("type");
-        int page = (int) params.get("page");
-        int limit = (int) params.get("limit");
+        int page = (int) Optional.ofNullable(params.get("page")).orElse(1);
+        int limit = (int) Optional.ofNullable(params.get("limit")).orElse(10);
         List files = this.fileService.getAllFiles(customerId, type, page, limit);
         int total = this.fileService.getFilesCount(customerId, type);
         HashMap body = new HashMap();
