@@ -18,18 +18,13 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api")
@@ -94,52 +89,23 @@ public class TagResource {
 
     @GetMapping("/tag/detail/export")
     public ResponseEntity<Resource> exportDetail(Map<String, Object> params) throws IOException {
-        String tagId = (String) params.get("tagId");
-        SecureData[] secureDatas = this.secureDataService.getSecureData(tagId);
-        KeySentence[] keySentences = this.keySentenceService.getKeySentence(tagId);
-        // write secureData.json
+        Tag[] tags = this.tagService.getTag(null, null, null, null);
+        List<Tag> tagList = Arrays.stream(tags).map(tag -> {
+            String tagId = String.valueOf(tag.getId());
+            SecureData[] secureDatas = this.secureDataService.getSecureData(tagId);
+            KeySentence[] keySentences = this.keySentenceService.getKeySentence(tagId);
+            tag.setSecureDatas(secureDatas);
+            tag.setKeySentences(keySentences);
+            return tag;
+        }).collect(Collectors.toList());
         Gson gson = new Gson();
-        String json = gson.toJson(secureDatas);
-        Path path = Paths.get("./secureData.json");
+        String json = gson.toJson(tagList);
+        Path path = Paths.get("./tags.json");
         Files.write(path, json.getBytes());
-        // write keySentences.json
-        Path path1 = Paths.get("./keySentences.json");
-        json = gson.toJson(keySentences);
-        Files.write(path1, json.getBytes());
 
-
-        String sourceFile = "./secureData.json";
-        FileOutputStream fos = new FileOutputStream("compressed.zip");
-        File fileToZip = new File(sourceFile);
-        FileInputStream fis = new FileInputStream(fileToZip);
-        ZipEntry zipEntry = new ZipEntry(fileToZip.getName());
-        ZipOutputStream zipOut = new ZipOutputStream(fos);
-        zipOut.putNextEntry(zipEntry);
-
-        byte[] bytes = new byte[1024];
-        int length;
-        while ((length = fis.read(bytes)) >= 0) {
-            zipOut.write(bytes, 0, length);
-        }
-        fis.close();
-
-
-        sourceFile = "./keySentences.json";
-        fileToZip = new File(sourceFile);
-        fis = new FileInputStream(fileToZip);
-        ZipEntry zipEntry1 = new ZipEntry(fileToZip.getName());
-        zipOut.putNextEntry(zipEntry1);
-        bytes = new byte[1024];
-        length = 0;
-        while ((length = fis.read(bytes)) >= 0) {
-            zipOut.write(bytes, 0, length);
-        }
-        fis.close();
-        zipOut.close();
-        fos.close();
-        InputStreamResource resource = new InputStreamResource(new FileInputStream("./compressed.zip"));
+        InputStreamResource resource = new InputStreamResource(new FileInputStream("./tags.json"));
         HttpHeaders headers = new HttpHeaders();
-        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=compressed.zip");
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=tags.json");
         return ResponseEntity.ok()
                 .headers(headers)
                 .contentType(MediaType.parseMediaType("application/octet-stream"))

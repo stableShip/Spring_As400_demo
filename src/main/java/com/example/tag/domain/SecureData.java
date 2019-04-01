@@ -9,7 +9,7 @@ public class SecureData implements Serializable {
     private static final long serialVersionUID = 1L;
     private transient int id;
 
-    private String tagId;
+    private transient String tagId;
 
     private String security;
 

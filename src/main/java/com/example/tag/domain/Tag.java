@@ -8,7 +8,7 @@ import java.io.Serializable;
 public class Tag implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    private int id;
+    private transient int id;
 
     private String cordcustId;
 
@@ -17,6 +17,10 @@ public class Tag implements Serializable {
     private String cordcrDate;
 
     private String cordcrTime;
+
+    private SecureData[] secureDatas;
+
+    private KeySentence[] keySentences;
 
     public String findAll(String customerId, String type, String cordcrDate, String cordcrTime) {
         StringBuffer sql = new StringBuffer("select * from tag where 1=1 ");
