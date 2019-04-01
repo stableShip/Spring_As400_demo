@@ -8,17 +8,28 @@ import com.example.tag.servive.SecureDataService;
 import com.example.tag.servive.TagService;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 @RestController
 @RequestMapping("/api")
@@ -80,4 +91,59 @@ public class TagResource {
         body.put("data", data);
         return new ResponseEntity(body, HttpStatus.OK);
     }
+
+    @GetMapping("/tag/detail/export")
+    public ResponseEntity<Resource> exportDetail(Map<String, Object> params) throws IOException {
+        String tagId = (String) params.get("tagId");
+        SecureData[] secureDatas = this.secureDataService.getSecureData(tagId);
+        KeySentence[] keySentences = this.keySentenceService.getKeySentence(tagId);
+        // write secureData.json
+        Gson gson = new Gson();
+        String json = gson.toJson(secureDatas);
+        Path path = Paths.get("./secureData.json");
+        Files.write(path, json.getBytes());
+        // write keySentences.json
+        Path path1 = Paths.get("./keySentences.json");
+        json = gson.toJson(keySentences);
+        Files.write(path1, json.getBytes());
+
+
+        String sourceFile = "./secureData.json";
+        FileOutputStream fos = new FileOutputStream("compressed.zip");
+        File fileToZip = new File(sourceFile);
+        FileInputStream fis = new FileInputStream(fileToZip);
+        ZipEntry zipEntry = new ZipEntry(fileToZip.getName());
+        ZipOutputStream zipOut = new ZipOutputStream(fos);
+        zipOut.putNextEntry(zipEntry);
+
+        byte[] bytes = new byte[1024];
+        int length;
+        while ((length = fis.read(bytes)) >= 0) {
+            zipOut.write(bytes, 0, length);
+        }
+        fis.close();
+
+
+        sourceFile = "./keySentences.json";
+        fileToZip = new File(sourceFile);
+        fis = new FileInputStream(fileToZip);
+        ZipEntry zipEntry1 = new ZipEntry(fileToZip.getName());
+        zipOut.putNextEntry(zipEntry1);
+        bytes = new byte[1024];
+        length = 0;
+        while ((length = fis.read(bytes)) >= 0) {
+            zipOut.write(bytes, 0, length);
+        }
+        fis.close();
+        zipOut.close();
+        fos.close();
+        InputStreamResource resource = new InputStreamResource(new FileInputStream("./compressed.zip"));
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=compressed.zip");
+        return ResponseEntity.ok()
+                .headers(headers)
+                .contentType(MediaType.parseMediaType("application/octet-stream"))
+                .body(resource);
+    }
+
 }
