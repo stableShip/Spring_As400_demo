@@ -1,9 +1,7 @@
 package com.example.tag.mapper;
 
 import com.example.tag.domain.KeySentence;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.SelectProvider;
+import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Component;
 
 @Mapper
@@ -12,4 +10,8 @@ public interface KeySentenceMapper {
     @SelectProvider(type = KeySentence.class, method = "findAll")
     KeySentence[] findAll(@Param("tagId") String tagId);
 
+
+    @Insert("insert into key_sentence(tagId, type, content) values(#{tagId},#{type}, #{content})")
+    @Options(useGeneratedKeys = true, keyProperty = "id")
+    int insect(KeySentence keySentence);
 }

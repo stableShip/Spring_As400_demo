@@ -43,6 +43,20 @@ public class TagResource {
         this.keySentenceService = keySentenceService;
     }
 
+
+    @PostMapping("/tag")
+    public ResponseEntity<Void> addTag(@RequestBody Tag tag) {
+        this.tagService.addTag(tag);
+        this.secureDataService.addSecureDatas(tag);
+        this.keySentenceService.addKeySentence(tag);
+        HashMap body = new HashMap();
+        body.put("status", 200);
+        HashMap data = new HashMap();
+        data.put("tag", tag);
+        body.put("data", data);
+        return new ResponseEntity(body, HttpStatus.OK);
+    }
+
     @PostMapping("/tags")
     public ResponseEntity<Void> getAllTags(@RequestBody Map<String, Object> params) {
         String customerId = (String) params.get("customerId");

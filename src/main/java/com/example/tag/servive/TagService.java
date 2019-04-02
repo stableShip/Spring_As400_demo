@@ -19,4 +19,9 @@ public class TagService {
         return tagDao.findAll(customerId, type, date, time);
     }
 
+    public Integer addTag(Tag tag) {
+        int updates = tagDao.insert(tag);
+        return updates;
+    }
+
 }
