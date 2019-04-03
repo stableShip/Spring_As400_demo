@@ -1,6 +1,5 @@
 package com.example.tag.util;
 
-import com.hsbc.carm.ha.WebAppComvert;
 import org.docx4j.jaxb.Context;
 import org.docx4j.openpackaging.contenttype.ContentType;
 import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
@@ -32,44 +31,44 @@ public class RTFUtil {
      */
     public static String toRtf(Map<String, List<Map<String, byte[]>>> map) throws IOException {
         String rtfName = "";
-        for (String key : map.keySet()) {
-            List<Map<String, byte[]>> list = map.get(key);
-
-            File tempFile = new File("tempFile");
-            FileOutputStream tempFileOut = null;
-            tempFileOut = new FileOutputStream(tempFile);
-            tempFile.delete();
-            tempFile.createNewFile();
-            for (Map<String, byte[]> dataMap : list) {
-                for (String dataKey : dataMap.keySet()) {
-                    byte[] bytes = dataMap.get(dataKey);
-                    String newStr = WebAppComvert.getUnicodeString(bytes);
-                    tempFileOut.write(newStr.getBytes("iso-8859-1"));
-                }
-            }
-            tempFileOut.flush();
-            tempFileOut.close();
-
-            // Use Gzip to unzip temp file and write data to rtf file
-            FileInputStream tempFileIn = new FileInputStream(tempFile);
-            File destFile = new File("./tempFiles/" + key + ".rtf");
-            destFile.delete();
-            destFile.createNewFile();
-
-            GZIPInputStream gzip = null;
-            FileOutputStream destFileOut = new FileOutputStream(destFile);
-            try {
-                gzip = new GZIPInputStream(tempFileIn);
-                writeToOutputStream(gzip, destFileOut, true);
-                gzip.close();
-            } catch (Exception e) {
-                writeToOutputStream(tempFileIn, destFileOut, true);
-            }
-            tempFileIn.close();
-            // remove temp file
-            tempFile.delete();
-            rtfName = destFile.getPath();
-        }
+//        for (String key : map.keySet()) {
+//            List<Map<String, byte[]>> list = map.get(key);
+//
+//            File tempFile = new File("tempFile");
+//            FileOutputStream tempFileOut = null;
+//            tempFileOut = new FileOutputStream(tempFile);
+//            tempFile.delete();
+//            tempFile.createNewFile();
+//            for (Map<String, byte[]> dataMap : list) {
+//                for (String dataKey : dataMap.keySet()) {
+//                    byte[] bytes = dataMap.get(dataKey);
+//                    String newStr = WebAppComvert.getUnicodeString(bytes);
+//                    tempFileOut.write(newStr.getBytes("iso-8859-1"));
+//                }
+//            }
+//            tempFileOut.flush();
+//            tempFileOut.close();
+//
+//            // Use Gzip to unzip temp file and write data to rtf file
+//            FileInputStream tempFileIn = new FileInputStream(tempFile);
+//            File destFile = new File("./tempFiles/" + key + ".rtf");
+//            destFile.delete();
+//            destFile.createNewFile();
+//
+//            GZIPInputStream gzip = null;
+//            FileOutputStream destFileOut = new FileOutputStream(destFile);
+//            try {
+//                gzip = new GZIPInputStream(tempFileIn);
+//                writeToOutputStream(gzip, destFileOut, true);
+//                gzip.close();
+//            } catch (Exception e) {
+//                writeToOutputStream(tempFileIn, destFileOut, true);
+//            }
+//            tempFileIn.close();
+//            // remove temp file
+//            tempFile.delete();
+//            rtfName = destFile.getPath();
+//        }
         return rtfName;
     }
 
