@@ -1,6 +1,7 @@
 package com.example.tag.web.rest;
 
 import com.example.tag.servive.FileService;
+import com.example.tag.util.RTFUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.FileReader;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
@@ -48,13 +51,20 @@ public class FileResource {
     public ResponseEntity<Void> generateRTF(@RequestBody Map<String, Object> params) throws Exception {
         String customerId = (String) params.get("customerId");
         String type = (String) params.get("type");
-        String filePath = this.fileService.generateFile(customerId, type);
+        String date = (String) params.get("date");
+        String time = (String) params.get("time");
+        String filePath = this.fileService.generateFile(customerId, type, date, time);
         Path currentRelativePath = Paths.get(filePath);
-        filePath = currentRelativePath.toAbsolutePath().toString();
+        String html = RTFUtil.coverToHtml(new FileReader(filePath));
+        Path p = Paths.get(filePath);
+        String fileName = p.getFileName().toString();
+        Path path = Paths.get(fileName + ".html");
+        Files.write(path, html.getBytes());
+//        filePath = currentRelativePath.toAbsolutePath().toString();
         HashMap body = new HashMap();
         body.put("status", 200);
         HashMap data = new HashMap();
-        data.put("file", filePath);
+        data.put("file", path.toAbsolutePath().toString());
         body.put("data", data);
         return new ResponseEntity(body, HttpStatus.OK);
     }
