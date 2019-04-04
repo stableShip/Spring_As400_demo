@@ -34,12 +34,10 @@ public class RTFUtil {
         String rtfName = "";
         for (String key : map.keySet()) {
             List<Map<String, byte[]>> list = map.get(key);
-
-            File tempFile = new File("tempFile");
-            FileOutputStream tempFileOut = null;
-            tempFileOut = new FileOutputStream(tempFile);
+            File tempFile = new File("./tempFile");
             tempFile.delete();
             tempFile.createNewFile();
+            FileOutputStream tempFileOut = new FileOutputStream(tempFile);
             for (Map<String, byte[]> dataMap : list) {
                 for (String dataKey : dataMap.keySet()) {
                     byte[] bytes = dataMap.get(dataKey);
@@ -49,7 +47,6 @@ public class RTFUtil {
             }
             tempFileOut.flush();
             tempFileOut.close();
-
             // Use Gzip to unzip temp file and write data to rtf file
             FileInputStream tempFileIn = new FileInputStream(tempFile);
             File destFile = new File("./tempFiles/" + key + ".rtf");
@@ -61,8 +58,8 @@ public class RTFUtil {
             try {
                 gzip = new GZIPInputStream(tempFileIn);
                 writeToOutputStream(gzip, destFileOut, true);
-                gzip.close();
             } catch (Exception e) {
+                e.printStackTrace();
                 writeToOutputStream(tempFileIn, destFileOut, true);
             }
             tempFileIn.close();
