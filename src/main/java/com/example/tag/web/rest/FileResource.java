@@ -1,5 +1,6 @@
 package com.example.tag.web.rest;
 
+import com.example.tag.domain.File;
 import com.example.tag.servive.FileService;
 import com.example.tag.util.RTFUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api")
@@ -36,7 +38,22 @@ public class FileResource {
         String type = (String) params.get("type");
         int page = (int) Optional.ofNullable(params.get("page")).orElse(1);
         int limit = (int) Optional.ofNullable(params.get("limit")).orElse(10);
-        List files = this.fileService.getAllFiles(customerId, type, page, limit);
+        List<File> files = this.fileService.getAllFiles(customerId, type, page, limit);
+        files.stream().map(file -> {
+            String id = file.getCordcustId();
+            String type_ = file.getCordcorType();
+            String date = file.getCordcrDate();
+            String time = file.getCordcrTime();
+            String filePath = null;
+            try {
+                filePath = this.fileService.generateFile(id, type_, date, time);
+                RTFUtil.coverToHtml(new FileReader(filePath));
+            } catch (Exception e) {
+                e.printStackTrace();
+                file.setStatus("broken");
+            }
+            return file;
+        }).collect(Collectors.toList());
         int total = this.fileService.getFilesCount(customerId, type);
         HashMap body = new HashMap();
         body.put("status", 200);
