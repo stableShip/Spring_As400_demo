@@ -37,6 +37,8 @@ public class FileDao {
         if (Optional.ofNullable(type).isPresent() && !type.isEmpty()) {
             sql += " and CORDCORTYP = :type";
             param.addValue("type", type);
+        } else {
+            sql += " and CORDCORTYP in ('AC', 'AR')";
         }
         sql += " ORDER BY CORDCRDATE DESC LIMIT :limit  OFFSET :skip ";
         List<Map<String, Object>> rows = this.jdbcTemplate.queryForList(sql, param);
@@ -67,6 +69,8 @@ public class FileDao {
         if (Optional.ofNullable(type).isPresent() && !type.isEmpty()) {
             sql += " and CORDCORTYP = :type";
             param.addValue("type", type);
+        } else {
+            sql += " and CORDCORTYP in ('AC', 'AR')";
         }
         int count = this.jdbcTemplate.queryForObject(sql, param, Integer.class);
         return count;
