@@ -33,9 +33,6 @@ public class RTFUtil {
                 for (String dataKey : dataMap.keySet()) {
                     byte[] bytes = dataMap.get(dataKey);
                     String newStr = new String(WebAppComvert.getUnicodeString(bytes).getBytes(), "utf-8");
-                    if (dataKey.equals("1")) {
-                        System.out.println(newStr);
-                    }
                     sb.append(newStr);
                 }
             }
@@ -60,9 +57,6 @@ public class RTFUtil {
                 for (String dataKey : dataMap.keySet()) {
                     byte[] bytes = dataMap.get(dataKey);
                     String newStr = new String(WebAppComvert.getUnicodeString(bytes).getBytes(), "utf-8");
-                    System.out.println(dataKey);
-                    System.out.println(dataKey.equals("1"));
-                    System.out.println(new String(newStr.getBytes("iso-8859-1"), "utf-8"));
                     tempFileOut.write(newStr.getBytes("iso-8859-1"));
                 }
             }
