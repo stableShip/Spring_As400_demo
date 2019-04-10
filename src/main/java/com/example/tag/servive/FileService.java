@@ -48,4 +48,9 @@ public class FileService {
         return RTFUtil.toRtf(dataMap);
     }
 
+    public String getRtfString(String customerId, String type, String date, String time) throws IOException {
+        Map<String, List<Map<String, byte[]>>> dataMap = this.fileDao.getDataMap(customerId, type, date, time);
+        return RTFUtil.toRtfString(dataMap);
+    }
+
 }

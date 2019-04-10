@@ -15,6 +15,7 @@ import java.io.FileReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,10 +45,14 @@ public class FileResource {
             String type_ = file.getCordcorType();
             String date = file.getCordcrDate();
             String time = file.getCordcrTime();
-            String filePath = null;
             try {
-                filePath = this.fileService.generateFile(id, type_, date, time);
-                RTFUtil.coverToHtml(new FileReader(filePath));
+                if (type_.equals("AC")) {
+                    String rtfString = this.fileService.getRtfString(id, type_, date, time);
+                    RTFUtil.coverToHtmlByStr(rtfString);
+                } else {
+                    String filePath = this.fileService.generateFile(id, type_, date, time);
+                    RTFUtil.coverToHtml(new FileReader(filePath));
+                }
             } catch (Exception e) {
                 e.printStackTrace();
                 file.setStatus("broken");
@@ -70,14 +75,17 @@ public class FileResource {
         String type = (String) params.get("type");
         String date = (String) params.get("date");
         String time = (String) params.get("time");
-        String filePath = this.fileService.generateFile(customerId, type, date, time);
-        Path currentRelativePath = Paths.get(filePath);
-        String html = RTFUtil.coverToHtml(new FileReader(filePath));
-        Path p = Paths.get(filePath);
-        String fileName = p.getFileName().toString();
-        Path path = Paths.get(fileName + ".html");
+        String html;
+        if (type.equals("AC")) {
+            String rtfString = this.fileService.getRtfString(customerId, type, date, time);
+            html = RTFUtil.coverToHtmlByStr(rtfString);
+        } else {
+            String filePath = this.fileService.generateFile(customerId, type, date, time);
+            html = RTFUtil.coverToHtml(new FileReader(filePath));
+        }
+        String filePath = MessageFormat.format("{0}_{1}_{2}_{3}.html", customerId, type, date, time);
+        Path path = Paths.get(filePath);
         Files.write(path, html.getBytes());
-//        filePath = currentRelativePath.toAbsolutePath().toString();
         HashMap body = new HashMap();
         body.put("status", 200);
         HashMap data = new HashMap();

@@ -25,6 +25,24 @@ import java.util.zip.ZipException;
 
 public class RTFUtil {
 
+    public static String toRtfString(Map<String, List<Map<String, byte[]>>> map) throws IOException {
+        StringBuffer sb = new StringBuffer();
+        for (String key : map.keySet()) {
+            List<Map<String, byte[]>> list = map.get(key);
+            for (Map<String, byte[]> dataMap : list) {
+                for (String dataKey : dataMap.keySet()) {
+                    byte[] bytes = dataMap.get(dataKey);
+                    String newStr = new String(WebAppComvert.getUnicodeString(bytes).getBytes(), "utf-8");
+                    if (dataKey.equals("1")) {
+                        System.out.println(newStr);
+                    }
+                    sb.append(newStr);
+                }
+            }
+        }
+        return sb.toString();
+    }
+
     /**
      * toRtf
      *
@@ -34,19 +52,23 @@ public class RTFUtil {
         String rtfName = "";
         for (String key : map.keySet()) {
             List<Map<String, byte[]>> list = map.get(key);
-            File tempFile = new File("./tempFile");
+            File tempFile = new File("tempFile");
             tempFile.delete();
             tempFile.createNewFile();
             FileOutputStream tempFileOut = new FileOutputStream(tempFile);
             for (Map<String, byte[]> dataMap : list) {
                 for (String dataKey : dataMap.keySet()) {
                     byte[] bytes = dataMap.get(dataKey);
-                    String newStr = WebAppComvert.getUnicodeString(bytes);
+                    String newStr = new String(WebAppComvert.getUnicodeString(bytes).getBytes(), "utf-8");
+                    System.out.println(dataKey);
+                    System.out.println(dataKey.equals("1"));
+                    System.out.println(new String(newStr.getBytes("iso-8859-1"), "utf-8"));
                     tempFileOut.write(newStr.getBytes("iso-8859-1"));
                 }
             }
             tempFileOut.flush();
             tempFileOut.close();
+
             // Use Gzip to unzip temp file and write data to rtf file
             FileInputStream tempFileIn = new FileInputStream(tempFile);
             File destFile = new File("./tempFiles/" + key + ".rtf");
@@ -58,13 +80,16 @@ public class RTFUtil {
             try {
                 gzip = new GZIPInputStream(tempFileIn);
                 writeToOutputStream(gzip, destFileOut, true);
+                gzip.close();
             } catch (Exception e) {
                 e.printStackTrace();
                 writeToOutputStream(tempFileIn, destFileOut, true);
             }
             tempFileIn.close();
+
             // remove temp file
             tempFile.delete();
+
             rtfName = destFile.getPath();
         }
         return rtfName;
@@ -85,6 +110,17 @@ public class RTFUtil {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public static String coverToHtmlByStr(String str) throws IOException, BadLocationException {
+        JEditorPane p = new JEditorPane();
+        p.setContentType("text/rtf");
+        EditorKit kitRtf = p.getEditorKitForContentType("text/rtf");
+        kitRtf.read(new ByteArrayInputStream(str.getBytes("utf-8")), p.getDocument(), 0);
+        EditorKit kitHtml = p.getEditorKitForContentType("text/html");
+        Writer writer = new StringWriter();
+        kitHtml.write(writer, p.getDocument(), 0, p.getDocument().getLength());
+        return writer.toString();
     }
 
     /**
