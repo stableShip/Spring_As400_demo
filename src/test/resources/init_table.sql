@@ -25,7 +25,8 @@ create table tag
 	cordcustId VARCHAR(80) not null,
 	cordcorType VARCHAR(80) not null,
 	cordcrDate VARCHAR(80) not null,
-	cordcrTime VARCHAR(80) not null
+	cordcrTime VARCHAR(80) not null,
+	remark VARCHAR(80) not null
 );
 
 
