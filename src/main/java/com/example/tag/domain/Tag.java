@@ -18,6 +18,8 @@ public class Tag implements Serializable {
 
     private String cordcrTime;
 
+    private String remark;
+
     private SecureData[] secureDatas;
 
     private KeySentence[] keySentences;
