@@ -48,7 +48,7 @@ public class Tag implements Serializable {
             sql.append(" and customerName=#{customerName}");
         }
         if (tag.getSerialNo() != null) {
-            sql.append(" and customerName=#{serialNo}");
+            sql.append(" and serialNo=#{serialNo}");
         }
         return sql.toString();
     }
