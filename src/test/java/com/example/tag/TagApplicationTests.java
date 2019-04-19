@@ -45,6 +45,8 @@ public class TagApplicationTests {
                 "\t\"cordcorType\": \"AR\",\n" +
                 "\t\"cordcrDate\": \"20181105\",\n" +
                 "\t\"cordcrTime\": \"175831\",\n" +
+                "\t\"serialNo\": \"serialNo\",\n" +
+                "\t\"customerName\": \"customerName\",\n" +
                 "\t\"secureDatas\": [{\n" +
                 "\t\t\"tagId\": 5,\n" +
                 "\t\t\"security\": \"test\",\n" +
@@ -68,11 +70,15 @@ public class TagApplicationTests {
         )
                 .andExpect(status().isOk())
                 .andReturn();
+        System.out.println(result.getResponse().getContentAsString());
         JsonObject jsonObject = (JsonObject) new JsonParser().parse(result.getResponse().getContentAsString());
         tag = jsonObject.get("data").getAsJsonObject().get("tag").getAsJsonObject().toString();
         Tag createdTag = new Gson().fromJson(tag, Tag.class);
         this.tagId = Integer.toString(createdTag.getId());
         assertEquals(createdTag.getCordcustId(), "C0003000116273");
+        assertEquals(createdTag.getSerialNo(), "serialNo");
+        assertEquals(createdTag.getCustomerName(), "customerName");
+
     }
 
 

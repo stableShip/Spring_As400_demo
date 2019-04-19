@@ -7,10 +7,14 @@ import org.springframework.stereotype.Component;
 @Mapper
 @Component
 public interface TagMapper {
-    @SelectProvider(type = Tag.class, method = "findAll")
-    Tag[] findAll(@Param("customerId") String customerId, @Param("type") String type, @Param("cordcrDate") String cordcrDate, @Param("cordcrTime") String cordcrTime);
 
-    @Insert("insert into tag(cordcustId, cordcorType, cordcrDate, cordcrTime, remark) values(#{cordcustId}, #{cordcorType}, #{cordcrDate}, #{cordcrTime}, #{remark})")
-    @Options(useGeneratedKeys = true, keyProperty = "id")
+    @Select("select * from tag where id = #{id}")
+    Tag findById(@Param("id") int id);
+
+    @SelectProvider(type = Tag.class, method = "findAll")
+    Tag[] findAll(Tag tag);
+
+    @Insert("insert into tag(cordcustId, cordcorType, cordcrDate, cordcrTime, remark, serialNo, customerName) values(#{cordcustId}, #{cordcorType}, #{cordcrDate}, #{cordcrTime}, #{remark}, #{serialNo}, #{customerName})")
+    @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
     int insert(Tag tag);
 }

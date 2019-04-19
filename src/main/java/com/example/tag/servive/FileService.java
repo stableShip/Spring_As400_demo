@@ -29,7 +29,12 @@ public class FileService {
     public List<File> getAllFiles(String customerId, String type, int page, int limit) {
         List<File> files = this.fileDao.getAllFiles(customerId, type, page, limit);
         files = files.stream().map(file -> {
-            Tag[] tags = tagDao.findAll(file.getCordcustId(), file.getCordcorType(), file.getCordcrDate(), file.getCordcrTime());
+            Tag tag = new Tag();
+            tag.setCordcustId(file.getCordcustId());
+            tag.setCordcrTime(file.getCordcrTime());
+            tag.setCordcorType(file.getCordcorType());
+            tag.setCordcrDate(file.getCordcrDate());
+            Tag[] tags = tagDao.findAll(tag);
             file.setStatus("None");
             if (tags.length > 0) {
                 file.setStatus("existed");

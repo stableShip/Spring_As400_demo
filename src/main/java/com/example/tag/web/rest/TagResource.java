@@ -46,13 +46,13 @@ public class TagResource {
 
     @PostMapping("/tag")
     public ResponseEntity<Void> addTag(@RequestBody Tag tag) {
-        this.tagService.addTag(tag);
+        Tag newTag = this.tagService.addTag(tag);
         this.secureDataService.addSecureDatas(tag);
         this.keySentenceService.addKeySentence(tag);
         HashMap body = new HashMap();
         body.put("status", 200);
         HashMap data = new HashMap();
-        data.put("tag", tag);
+        data.put("tag", newTag);
         body.put("data", data);
         return new ResponseEntity(body, HttpStatus.OK);
     }
@@ -63,15 +63,24 @@ public class TagResource {
         String type = (String) params.get("type");
         String date = (String) params.get("date");
         String time = (String) params.get("time");
+        String serialNo = (String) params.get("serialNo");
+        String customerName = (String) params.get("customerName");
         int page = (int) Optional.ofNullable(params.get("page")).orElse(1);
         int limit = (int) Optional.ofNullable(params.get("limit")).orElse(10);
         Page pageInfo = PageHelper.startPage(page, limit);
-        Tag[] tag = this.tagService.getTag(customerId, type, date, time);
+        Tag tag = new Tag();
+        tag.setCordcustId(customerId);
+        tag.setCordcorType(type);
+        tag.setCordcrDate(date);
+        tag.setCordcrTime(time);
+        tag.setSerialNo(serialNo);
+        tag.setCustomerName(customerName);
+        Tag[] tags = this.tagService.getTag(tag);
         long total = pageInfo.getTotal();
         HashMap body = new HashMap();
         body.put("status", 200);
         HashMap data = new HashMap();
-        data.put("tag", tag);
+        data.put("tag", tags);
         data.put("total", total);
         body.put("data", data);
         return new ResponseEntity(body, HttpStatus.OK);
@@ -103,7 +112,7 @@ public class TagResource {
 
     @GetMapping("/tag/detail/export")
     public ResponseEntity<Resource> exportDetail(Map<String, Object> params) throws IOException {
-        Tag[] tags = this.tagService.getTag(null, null, null, null);
+        Tag[] tags = this.tagService.getTag(new Tag());
         List<Tag> tagList = Arrays.stream(tags).map(tag -> {
             String tagId = String.valueOf(tag.getId());
             SecureData[] secureDatas = this.secureDataService.getSecureData(tagId);

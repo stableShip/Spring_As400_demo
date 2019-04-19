@@ -15,13 +15,13 @@ public class TagService {
         this.tagDao = dao;
     }
 
-    public Tag[] getTag(String customerId, String type, String date, String time) {
-        return tagDao.findAll(customerId, type, date, time);
+    public Tag[] getTag(Tag tag) {
+        return tagDao.findAll(tag);
     }
 
-    public Integer addTag(Tag tag) {
-        int updates = tagDao.insert(tag);
-        return updates;
+    public Tag addTag(Tag tag) {
+        tagDao.insert(tag);
+        return tagDao.findById(tag.getId());
     }
 
 }
