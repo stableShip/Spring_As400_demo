@@ -23,12 +23,13 @@ create table tag
 	id INTEGER not null
 		primary key,
 	cordcustId VARCHAR(80) not null,
-	cordcorType VARCHAR(80) not null,
-	cordcrDate VARCHAR(80) not null,
-	cordcrTime VARCHAR(80) not null,
-	remark VARCHAR(80) not null,
-  serialNo VARCHAR(80) not null,
-	customerName VARCHAR(80) not null
+	cordcorType VARCHAR(80),
+	cordcrDate VARCHAR(80),
+	cordcrTime VARCHAR(80),
+	remark VARCHAR(80),
+  serialNo VARCHAR(80),
+	customerName VARCHAR(80),
+	createdAt BIGINT
 );
 
 

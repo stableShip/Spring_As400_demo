@@ -30,4 +30,9 @@ public class KeySentenceService {
             return keySentenceMapper.insect(keySentence);
         }).collect(Collectors.toList());
     }
+
+    public int deleteKeySentence(String id) {
+        return keySentenceMapper.deleteKeySentenceByTagId(id);
+    }
+
 }

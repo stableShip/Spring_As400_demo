@@ -30,4 +30,8 @@ public class SecureDataService {
             return secureDataMapper.insect(secureData);
         }).collect(Collectors.toList());
     }
+
+    public int deleteSecure(String id) {
+        return secureDataMapper.deleteByTagId(id);
+    }
 }

@@ -5,6 +5,8 @@ import com.example.tag.mapper.TagMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
+
 @Service
 public class TagService {
 
@@ -20,8 +22,13 @@ public class TagService {
     }
 
     public Tag addTag(Tag tag) {
+        tag.setCreatedAt(new Date().getTime());
         tagDao.insert(tag);
         return tagDao.findById(tag.getId());
+    }
+
+    public int deleteTag(String id) {
+        return tagDao.deleteById(id);
     }
 
 }

@@ -57,6 +57,20 @@ public class TagResource {
         return new ResponseEntity(body, HttpStatus.OK);
     }
 
+    @DeleteMapping("/tag")
+    public ResponseEntity<Void> deleteTag(@RequestBody Map<String, Object> params) {
+        String tagId = (String) params.get("tagId");
+        this.tagService.deleteTag(tagId);
+        this.secureDataService.deleteSecure(tagId);
+        this.keySentenceService.deleteKeySentence(tagId);
+        HashMap body = new HashMap();
+        body.put("status", 200);
+        HashMap data = new HashMap();
+        data.put("deleted", true);
+        body.put("data", data);
+        return new ResponseEntity(body, HttpStatus.OK);
+    }
+
     @PostMapping("/tags")
     public ResponseEntity<Void> getAllTags(@RequestBody Map<String, Object> params) {
         String customerId = (String) params.get("customerId");

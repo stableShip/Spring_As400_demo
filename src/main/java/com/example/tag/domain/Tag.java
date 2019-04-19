@@ -28,6 +28,8 @@ public class Tag implements Serializable {
 
     private KeySentence[] keySentences;
 
+    private long createdAt;
+
     public String findAll(Tag tag) {
         StringBuffer sql = new StringBuffer("select * from tag where 1=1 ");
         if (tag.getCordcorType() != null) {

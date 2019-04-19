@@ -2,9 +2,12 @@ package com.example.tag;
 
 import com.example.tag.domain.Tag;
 import com.google.gson.*;
+import org.junit.Assert;
 import org.junit.Before;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -16,11 +19,13 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import static org.junit.Assert.assertEquals;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class TagApplicationTests {
 
     private MockMvc mockMvc;
@@ -39,7 +44,7 @@ public class TagApplicationTests {
     }
 
     @Test
-    public void addTag() throws Exception {
+    public void case1_addTag() throws Exception {
         String tag = "{\n" +
                 "\t\"cordcustId\": \"C0003000116273\",\n" +
                 "\t\"cordcorType\": \"AR\",\n" +
@@ -78,12 +83,12 @@ public class TagApplicationTests {
         assertEquals(createdTag.getCordcustId(), "C0003000116273");
         assertEquals(createdTag.getSerialNo(), "serialNo");
         assertEquals(createdTag.getCustomerName(), "customerName");
-
+        Assert.assertTrue(createdTag.getCreatedAt() > 0);
     }
 
 
     @Test
-    public void getAllTags() throws Exception {
+    public void case2_getAllTags() throws Exception {
         MvcResult result = this.mockMvc.perform(
                 post("/api/tags").content("{}")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -98,7 +103,7 @@ public class TagApplicationTests {
     }
 
     @Test
-    public void getSecure() throws Exception {
+    public void case3_getSecure() throws Exception {
         JsonObject json = new JsonObject();
         json.addProperty("tagId", this.tagId);
         MvcResult result = this.mockMvc.perform(
@@ -116,7 +121,7 @@ public class TagApplicationTests {
     }
 
     @Test
-    public void getKeySentence() throws Exception {
+    public void case4_getKeySentence() throws Exception {
         JsonObject json = new JsonObject();
         json.addProperty("tagId", this.tagId);
         MvcResult result = this.mockMvc.perform(
@@ -133,5 +138,21 @@ public class TagApplicationTests {
         assertEquals(secureDatas.get(0).getAsJsonObject().get("tagId").getAsString(), tagId);
 
     }
+
+    @Test
+    public void case5_deleteTag() throws Exception {
+        JsonObject json = new JsonObject();
+        json.addProperty("tagId", this.tagId);
+        MvcResult result = this.mockMvc.perform(
+                delete("/api/tag").content(json.toString())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+        )
+                .andExpect(status().isOk())
+                .andReturn();
+        System.out.println(result.getResponse().getContentAsString());
+//        JsonElement je = new JsonParser().parse(result.getResponse().getContentAsString());
+    }
+
 
 }

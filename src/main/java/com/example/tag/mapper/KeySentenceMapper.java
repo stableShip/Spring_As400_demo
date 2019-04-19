@@ -14,4 +14,7 @@ public interface KeySentenceMapper {
     @Insert("insert into key_sentence(tagId, type, content) values(#{tagId},#{type}, #{content})")
     @Options(useGeneratedKeys = true, keyProperty = "id")
     int insect(KeySentence keySentence);
+
+    @Delete("delete from key_sentence where tagId=#{tagId}")
+    int deleteKeySentenceByTagId(@Param("tagId") String tagId);
 }
