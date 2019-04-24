@@ -1,4 +1,4 @@
-package com.example.tag;
+package com.example.tag.web.rest;
 
 import com.example.tag.domain.Tag;
 import com.google.gson.*;
@@ -26,7 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class TagApplicationTests {
+public class TagResourceTests {
 
     private MockMvc mockMvc;
 

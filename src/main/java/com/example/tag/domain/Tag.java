@@ -36,7 +36,7 @@ public class Tag implements Serializable {
             sql.append(" and cordcorType =#{cordcorType}");
         }
         if (tag.getCordcustId() != null) {
-            sql.append(" and cordcustId=#{customerId}");
+            sql.append(" and cordcustId=#{cordcustId}");
         }
         if (tag.getCordcrDate() != null) {
             sql.append(" and cordcrDate=#{cordcrDate}");

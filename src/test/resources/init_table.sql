@@ -32,6 +32,19 @@ create table tag
 	createdAt BIGINT
 );
 
+CREATE SCHEMA xxx;
+create table xxx.GCCORDP
+(
+  id         INTEGER     not null
+    primary key,
+  CORDCUSTID VARCHAR(80) not null,
+  CORDCRDATE VARCHAR(80),
+  CORDCORTYP VARCHAR(80),
+  CORDCRTIME VARCHAR(80),
+  GCCORDP    VARCHAR(80),
+  CORDBLKNUM VARCHAR(80),
+  createdAt  BIGINT
+);
 
 
 
