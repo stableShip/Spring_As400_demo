@@ -33,7 +33,7 @@ public class Tag implements Serializable {
     public String findAll(Tag tag) {
         StringBuffer sql = new StringBuffer("select * from tag where 1=1 ");
         if (tag.getCordcorType() != null) {
-            sql.append(" and cordcorType =#{type}");
+            sql.append(" and cordcorType =#{cordcorType}");
         }
         if (tag.getCordcustId() != null) {
             sql.append(" and cordcustId=#{customerId}");

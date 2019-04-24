@@ -103,6 +103,26 @@ public class TagApplicationTests {
     }
 
     @Test
+    public void case2_getAllTagsByCond() throws Exception {
+        JsonObject json = new JsonObject();
+        json.addProperty("serialNo", "serialNo");
+        json.addProperty("customerName", "customerName");
+        json.addProperty("cordcustId", "C0003000116273");
+        json.addProperty("cordcorType", "AR");
+        MvcResult result = this.mockMvc.perform(
+                post("/api/tags").content(json.toString())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+        )
+                .andExpect(status().isOk())
+                .andReturn();
+        System.out.println(result.getResponse().getContentAsString());
+        JsonElement je = new JsonParser().parse(result.getResponse().getContentAsString());
+        int total = je.getAsJsonObject().get("data").getAsJsonObject().get("total").getAsInt();
+        assertEquals(total, 1);
+    }
+
+    @Test
     public void case3_getSecure() throws Exception {
         JsonObject json = new JsonObject();
         json.addProperty("tagId", this.tagId);
