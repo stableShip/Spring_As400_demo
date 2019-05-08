@@ -61,7 +61,7 @@ public class FileResource {
         }).collect(Collectors.toList());
         int total = this.fileService.getFilesCount(customerId, type);
         HashMap body = new HashMap();
-        body.put("status", 200);
+        body.put("code", 200);
         HashMap data = new HashMap();
         data.put("files", files);
         data.put("total", total);
@@ -87,7 +87,7 @@ public class FileResource {
         Path path = Paths.get(filePath);
         Files.write(path, html.getBytes());
         HashMap body = new HashMap();
-        body.put("status", 200);
+        body.put("code", 200);
         HashMap data = new HashMap();
         data.put("file", path.toAbsolutePath().toString());
         body.put("data", data);

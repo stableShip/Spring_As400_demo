@@ -32,6 +32,14 @@ create table tag
 	createdAt BIGINT
 );
 
+create table user
+(
+	id INTEGER not null
+		primary key,
+	name VARCHAR(80) not null,
+	password VARCHAR(80)
+);
+
 CREATE SCHEMA xxx;
 create table xxx.GCCORDP
 (

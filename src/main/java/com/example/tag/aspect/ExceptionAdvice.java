@@ -1,6 +1,8 @@
 package com.example.tag.aspect;
 
 import com.example.tag.exception.BaseException;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -17,6 +19,21 @@ public class ExceptionAdvice {
         Map map = new HashMap();
         map.put("code", 100);
         map.put("msg", "系统错误");
+        return map;
+    }
+
+    @ResponseBody
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public Map handleValidationExceptions(MethodArgumentNotValidException ex) {
+        Map map = new HashMap();
+        map.put("code", 300);
+        Map data = new HashMap();
+        ex.getBindingResult().getAllErrors().forEach((error) -> {
+            String fieldName = ((FieldError) error).getField();
+            String errorMessage = error.getDefaultMessage();
+            data.put(fieldName, errorMessage);
+        });
+        map.put("data", data);
         return map;
     }
 

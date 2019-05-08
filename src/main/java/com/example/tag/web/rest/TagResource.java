@@ -50,7 +50,7 @@ public class TagResource {
         this.secureDataService.addSecureDatas(tag);
         this.keySentenceService.addKeySentence(tag);
         HashMap body = new HashMap();
-        body.put("status", 200);
+        body.put("code", 200);
         HashMap data = new HashMap();
         data.put("tag", newTag);
         body.put("data", data);
@@ -64,7 +64,7 @@ public class TagResource {
         this.secureDataService.deleteSecure(tagId);
         this.keySentenceService.deleteKeySentence(tagId);
         HashMap body = new HashMap();
-        body.put("status", 200);
+        body.put("code", 200);
         HashMap data = new HashMap();
         data.put("deleted", true);
         body.put("data", data);
@@ -92,7 +92,7 @@ public class TagResource {
         Tag[] tags = this.tagService.getTag(tag);
         long total = pageInfo.getTotal();
         HashMap body = new HashMap();
-        body.put("status", 200);
+        body.put("code", 200);
         HashMap data = new HashMap();
         data.put("tag", tags);
         data.put("total", total);
@@ -105,7 +105,7 @@ public class TagResource {
         String tagId = (String) params.get("tagId");
         SecureData[] secureDatas = this.secureDataService.getSecureData(tagId);
         HashMap body = new HashMap();
-        body.put("status", 200);
+        body.put("code", 200);
         HashMap data = new HashMap();
         data.put("secureDatas", secureDatas);
         body.put("data", data);
@@ -117,7 +117,7 @@ public class TagResource {
         String tagId = (String) params.get("tagId");
         KeySentence[] keySentences = this.keySentenceService.getKeySentence(tagId);
         HashMap body = new HashMap();
-        body.put("status", 200);
+        body.put("code", 200);
         HashMap data = new HashMap();
         data.put("keySentences", keySentences);
         body.put("data", data);
