@@ -19,8 +19,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import static org.junit.Assert.assertEquals;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
@@ -160,7 +159,48 @@ public class TagResourceTests {
     }
 
     @Test
-    public void case5_deleteTag() throws Exception {
+    public void case5_updateTag() throws Exception {
+        System.out.println(this.tagId);
+        String tag = "{\n" +
+                "\t\"id\":" + this.tagId + "," +
+                "\t\"cordcustId\": \"updatedId\",\n" +
+                "\t\"cordcorType\": \"updatedType\",\n" +
+                "\t\"cordcrDate\": \"updatedDate\",\n" +
+                "\t\"cordcrTime\": \"175831\",\n" +
+                "\t\"serialNo\": \"serialNo\",\n" +
+                "\t\"customerName\": \"customerName\",\n" +
+                "\t\"secureDatas\": [{\n" +
+                "\t\t\"tagId\": 5,\n" +
+                "\t\t\"security\": \"test\",\n" +
+                "\t\t\"depositor\": \"test\",\n" +
+                "\t\t\"facilities\": \"test\",\n" +
+                "\t\t\"valuation\": \"test\",\n" +
+                "\t\t\"tag\": \"test\",\n" +
+                "\t\t\"comments\": \"ssss\"\n" +
+                "\t\t\n" +
+                "\t}],\n" +
+                "\t\"keySentences\": [{\n" +
+                "\t\t\"type\": \"updated\",\n" +
+                "\t\t\"content\": \"sdffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffsdddddddddddddddddddddddd\"\n" +
+                "\t\t\n" +
+                "\t}]\n" +
+                "}";
+        MvcResult result = this.mockMvc.perform(
+                put("/api/tag").content(tag)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+        )
+                .andExpect(status().isOk())
+                .andReturn();
+        System.out.println(result.getResponse().getContentAsString());
+        JsonElement je = new JsonParser().parse(result.getResponse().getContentAsString());
+        JsonArray keySentences = je.getAsJsonObject().get("data").getAsJsonObject().get("tag").getAsJsonObject().get("keySentences").getAsJsonArray();
+        assertEquals(keySentences.size(), 1);
+        assertEquals(keySentences.get(0).getAsJsonObject().get("type").getAsString(), "updated");
+    }
+
+    @Test
+    public void case6_deleteTag() throws Exception {
         JsonObject json = new JsonObject();
         json.addProperty("tagId", this.tagId);
         MvcResult result = this.mockMvc.perform(

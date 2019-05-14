@@ -149,4 +149,19 @@ public class TagResource {
                 .body(resource);
     }
 
+
+    @PutMapping("/tag")
+    public ResponseEntity<Void> updateTag(@RequestBody Tag tag) {
+        Tag newTag = this.tagService.updateTag(tag);
+        this.secureDataService.deleteSecure(Integer.toString(tag.getId()));
+        this.keySentenceService.deleteKeySentence(Integer.toString(tag.getId()));
+        newTag.setSecureDatas(this.secureDataService.addSecureDatas(tag));
+        newTag.setKeySentences(this.keySentenceService.addKeySentence(tag));
+        HashMap body = new HashMap();
+        body.put("code", 200);
+        HashMap data = new HashMap();
+        data.put("tag", newTag);
+        body.put("data", data);
+        return new ResponseEntity(body, HttpStatus.OK);
+    }
 }

@@ -31,4 +31,8 @@ public class TagService {
         return tagDao.deleteById(id);
     }
 
+    public Tag updateTag(Tag tag) {
+        tagDao.update(tag);
+        return tagDao.findById(tag.getId());
+    }
 }

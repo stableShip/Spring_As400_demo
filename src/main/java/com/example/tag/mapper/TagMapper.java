@@ -20,4 +20,7 @@ public interface TagMapper {
     @Insert("insert into tag(cordcustId, cordcorType, cordcrDate, cordcrTime, remark, serialNo, customerName, createdAt) values(#{cordcustId}, #{cordcorType}, #{cordcrDate}, #{cordcrTime}, #{remark}, #{serialNo}, #{customerName}, #{createdAt})")
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
     int insert(Tag tag);
+
+    @Update("update tag set cordcustId=#{cordcustId}, cordcorType=#{cordcorType}, cordcrDate=#{cordcrDate}, cordcrTime=#{cordcrTime}, remark=#{remark}, serialNo = #{serialNo}, customerName = #{customerName} where id = #{id}")
+    int update(Tag tag);
 }

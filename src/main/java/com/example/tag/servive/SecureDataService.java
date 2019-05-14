@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
-import java.util.stream.Collectors;
 
 @Service
 public class SecureDataService {
@@ -23,12 +22,13 @@ public class SecureDataService {
         return secureDataMapper.findAll(tagId);
     }
 
-    public void addSecureDatas(Tag tag) {
+    public SecureData[] addSecureDatas(Tag tag) {
         SecureData[] secureDatas = tag.getSecureDatas();
-        Arrays.stream(secureDatas).map(secureData -> {
+        return Arrays.stream(secureDatas).map(secureData -> {
             secureData.setTagId(Integer.toString(tag.getId()));
-            return secureDataMapper.insect(secureData);
-        }).collect(Collectors.toList());
+            secureDataMapper.insect(secureData);
+            return secureData;
+        }).toArray(SecureData[]::new);
     }
 
     public int deleteSecure(String id) {
