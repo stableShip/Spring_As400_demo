@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
+import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.jdbc.SqlConfig;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -199,8 +201,31 @@ public class TagResourceTests {
         assertEquals(keySentences.get(0).getAsJsonObject().get("type").getAsString(), "updated");
     }
 
+
+
     @Test
-    public void case6_deleteTag() throws Exception {
+    @Sql(
+            config = @SqlConfig(dataSource = "sqliteDataSource"),
+            scripts = "/prepareData/com.example.tag.web.rest/TagResourceTests/case6_findbycond.sql"
+    )
+    public void case6_findByCond() throws Exception {
+        JsonObject json = new JsonObject();
+        json.addProperty("customerId", "2");
+        MvcResult result = this.mockMvc.perform(
+                post("/api/tags").content(json.toString())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+        )
+                .andExpect(status().isOk())
+                .andReturn();
+        System.out.println(result.getResponse().getContentAsString());
+        JsonElement je = new JsonParser().parse(result.getResponse().getContentAsString());
+        int total = je.getAsJsonObject().get("data").getAsJsonObject().get("total").getAsInt();
+        assertEquals(total, 1);
+    }
+
+    @Test
+    public void case7_deleteTag() throws Exception {
         JsonObject json = new JsonObject();
         json.addProperty("tagId", this.tagId);
         MvcResult result = this.mockMvc.perform(
