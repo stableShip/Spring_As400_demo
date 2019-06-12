@@ -106,7 +106,20 @@
             <version>4.2.2</version>
         </dependency>
 
-
+        <dependency>
+            <groupId>com.artofsolving</groupId>
+            <artifactId>jodconverter</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/src/lib/jodconverter-2.2.2.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>com.artofsolving</groupId>
+            <artifactId>jodconverter-cli</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/src/lib/jodconverter-cli-2.2.2.jar</systemPath>
+        </dependency>
     </dependencies>
 
     <build>
