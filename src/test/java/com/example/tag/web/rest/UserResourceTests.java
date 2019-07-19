@@ -1,8 +1,12 @@
 package com.example.tag.web.rest;
 
+import com.example.tag.domain.User;
+import com.example.tag.mapper.UserMapper;
+import com.example.tag.util.ErrorMsgConst;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
@@ -33,6 +37,9 @@ public class UserResourceTests {
 
     @Autowired
     private WebApplicationContext context;
+
+    @Autowired
+    private UserMapper userMapper;
 
     private MockHttpSession session;
 
@@ -79,7 +86,7 @@ public class UserResourceTests {
         System.out.println(result.getResponse().getContentAsString());
         JsonElement je = new JsonParser().parse(result.getResponse().getContentAsString());
         int code = je.getAsJsonObject().get("code").getAsInt();
-        assertEquals(code, 200);
+        assertEquals(200, code);
 
     }
 
@@ -102,5 +109,57 @@ public class UserResourceTests {
         int code = je.getAsJsonObject().get("code").getAsInt();
         assertEquals(1000, code);
 
+    }
+
+    @Test
+    @Sql(
+            config = @SqlConfig(dataSource = "sqliteDataSource"),
+            scripts = "/prepareData/com.example.tag.web.rest/UserResourceTests/case4_addUser_userExist.sql"
+    )
+    public void case4_addUser_userExist() throws Exception {
+        String user = "{\n" +
+                "  \"token\": \"test\",\n" +
+                "  \"username\": \"test\",\n" +
+                "  \"password\": \"12345\",\n" +
+                "  \"role\": \"atest\"\n" +
+                "}";
+        MvcResult result = this.mockMvc.perform(
+                post("/api/user/addUser").content(user)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+        )
+                .andExpect(status().isOk())
+                .andReturn();
+        System.out.println(result.getResponse().getContentAsString());
+        JsonElement je = new JsonParser().parse(result.getResponse().getContentAsString());
+        int code = je.getAsJsonObject().get("code").getAsInt();
+        String msg = je.getAsJsonObject().get("msg").getAsString();
+        assertEquals(1000, code);
+        assertEquals(ErrorMsgConst.User_Exist, msg);
+    }
+
+    @Test
+    public void case5_addUser_success() throws Exception {
+        String user = "{\n" +
+                "  \"token\": \"test\",\n" +
+                "  \"username\": \"not_exist\",\n" +
+                "  \"password\": \"12345\",\n" +
+                "  \"role\": \"atest\"\n" +
+                "}";
+        MvcResult result = this.mockMvc.perform(
+                post("/api/user/addUser").content(user)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+        )
+                .andExpect(status().isOk())
+                .andReturn();
+        System.out.println(result.getResponse().getContentAsString());
+        JsonElement je = new JsonParser().parse(result.getResponse().getContentAsString());
+        int code = je.getAsJsonObject().get("code").getAsInt();
+        String name = je.getAsJsonObject().get("data").getAsJsonObject().get("user").getAsJsonObject().get("name").getAsString();
+        Assert.assertEquals(200, code);
+        assertEquals("not_exist", name);
+        User createUser = userMapper.findUserByName(name);
+        Assert.assertNotNull(createUser);
     }
 }

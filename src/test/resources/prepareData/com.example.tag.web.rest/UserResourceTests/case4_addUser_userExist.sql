@@ -1,2 +1,2 @@
 insert into user(id, name, password, role)
-values (1, 'admin', '123456', 'test')
+values (2, 'test', '123456', 'test');

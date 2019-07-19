@@ -1,8 +1,10 @@
 package com.example.tag.servive;
 
 import com.example.tag.domain.User;
+import com.example.tag.exception.BaseException;
 import com.example.tag.exception.ResourceNotFoundException;
 import com.example.tag.mapper.UserMapper;
+import com.example.tag.util.ErrorMsgConst;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,4 +27,12 @@ public class UserService {
         return user;
     }
 
+    public User addUser(User user) {
+        User findUser = userMapper.findUserByName(user.getName());
+        if (findUser != null) {
+            throw new BaseException(ErrorMsgConst.User_Exist);
+        }
+        userMapper.createUser(user);
+        return userMapper.findById(user.getId());
+    }
 }
