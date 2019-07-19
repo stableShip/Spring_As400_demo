@@ -36,7 +36,7 @@ create table tag
 
 create table user
 (
-  id         INTEGER     not null
+  id         INTEGER    not null auto_increment
     primary key,
   name       VARCHAR(80) not null,
   password   VARCHAR(80),
