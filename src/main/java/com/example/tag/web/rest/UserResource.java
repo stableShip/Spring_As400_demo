@@ -28,11 +28,8 @@ public class UserResource {
     @PostMapping("/login")
     public ResponseEntity<Void> login(@RequestBody  @Valid User user) {
         User userInfo = userService.login(user);
-        HashMap body = new HashMap();
-        body.put("code", 200);
         HashMap data = new HashMap();
         data.put("token", userInfo);
-        body.put("data", data);
-        return new ResponseEntity(body, HttpStatus.OK);
+        return new ResponseEntity(data, HttpStatus.OK);
     }
 }

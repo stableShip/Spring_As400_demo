@@ -60,13 +60,10 @@ public class FileResource {
             return file;
         }).collect(Collectors.toList());
         int total = this.fileService.getFilesCount(customerId, type);
-        HashMap body = new HashMap();
-        body.put("code", 200);
         HashMap data = new HashMap();
         data.put("files", files);
         data.put("total", total);
-        body.put("data", data);
-        return new ResponseEntity(body, HttpStatus.OK);
+        return new ResponseEntity(data, HttpStatus.OK);
     }
 
     @PostMapping("/files/rtf")
@@ -86,11 +83,8 @@ public class FileResource {
         String filePath = MessageFormat.format("{0}_{1}_{2}_{3}.html", customerId, type, date, time);
         Path path = Paths.get(filePath);
         Files.write(path, html.getBytes());
-        HashMap body = new HashMap();
-        body.put("code", 200);
         HashMap data = new HashMap();
         data.put("file", path.toAbsolutePath().toString());
-        body.put("data", data);
-        return new ResponseEntity(body, HttpStatus.OK);
+        return new ResponseEntity(data, HttpStatus.OK);
     }
 }
