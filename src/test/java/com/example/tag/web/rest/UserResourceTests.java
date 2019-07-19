@@ -100,7 +100,7 @@ public class UserResourceTests {
         System.out.println(result.getResponse().getContentAsString());
         JsonElement je = new JsonParser().parse(result.getResponse().getContentAsString());
         int code = je.getAsJsonObject().get("code").getAsInt();
-        assertEquals(code, 200);
+        assertEquals(1000, code);
 
     }
 }

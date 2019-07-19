@@ -1,6 +1,7 @@
 package com.example.tag.servive;
 
 import com.example.tag.domain.User;
+import com.example.tag.exception.ResourceNotFoundException;
 import com.example.tag.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,7 +18,11 @@ public class UserService {
     }
 
     public User login(User user) {
-        return userMapper.findUserByNameAndPwd(user);
+        User findUser = userMapper.findUserByNameAndPwd(user);
+        if (findUser == null) {
+            throw new ResourceNotFoundException("user not found");
+        }
+        return user;
     }
 
 }

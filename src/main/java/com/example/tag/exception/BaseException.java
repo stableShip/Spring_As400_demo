@@ -10,8 +10,8 @@ public class BaseException extends RuntimeException {
     private String code;
     private String msg;
 
-    public BaseException(String code, String msg) {
-        this.code = code;
+    public BaseException(String msg) {
+        this.setCode("1000");
         this.msg = msg;
     }
 
