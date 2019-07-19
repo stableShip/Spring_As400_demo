@@ -36,11 +36,13 @@ create table tag
 
 create table user
 (
-  id       INTEGER     not null
+  id         INTEGER     not null
     primary key,
-  name     VARCHAR(80) not null,
-  password VARCHAR(80),
-  role     VARCHAR(80) not null
+  name       VARCHAR(80) not null,
+  password   VARCHAR(80),
+  role       VARCHAR(80) not null,
+  created_at TIMESTAMP   NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMP   NOT NULL DEFAULT NOW() ON UPDATE now()
 );
 
 

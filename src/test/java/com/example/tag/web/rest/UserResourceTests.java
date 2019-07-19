@@ -73,7 +73,7 @@ public class UserResourceTests {
     public void case2_login_success() throws Exception {
 
         JsonObject json = new JsonObject();
-        json.addProperty("name", "admin");
+        json.addProperty("name", "admin@test.com");
         json.addProperty("password", "123456");
 
         MvcResult result = this.mockMvc.perform(
@@ -94,7 +94,7 @@ public class UserResourceTests {
     public void case3_login_fail_with_wrong_pass() throws Exception {
 
         JsonObject json = new JsonObject();
-        json.addProperty("name", "admin");
+        json.addProperty("name", "admin@tets.com");
         json.addProperty("password", "wrong");
 
         MvcResult result = this.mockMvc.perform(
@@ -108,7 +108,6 @@ public class UserResourceTests {
         JsonElement je = new JsonParser().parse(result.getResponse().getContentAsString());
         int code = je.getAsJsonObject().get("code").getAsInt();
         assertEquals(1000, code);
-
     }
 
     @Test
@@ -119,7 +118,7 @@ public class UserResourceTests {
     public void case4_addUser_userExist() throws Exception {
         String user = "{\n" +
                 "  \"token\": \"test\",\n" +
-                "  \"username\": \"test\",\n" +
+                "  \"username\": \"test@test.com\",\n" +
                 "  \"password\": \"12345\",\n" +
                 "  \"role\": \"atest\"\n" +
                 "}";
@@ -142,7 +141,7 @@ public class UserResourceTests {
     public void case5_addUser_success() throws Exception {
         String user = "{\n" +
                 "  \"token\": \"test\",\n" +
-                "  \"username\": \"not_exist\",\n" +
+                "  \"username\": \"not_exist@test.com\",\n" +
                 "  \"password\": \"12345\",\n" +
                 "  \"role\": \"atest\"\n" +
                 "}";
@@ -158,7 +157,7 @@ public class UserResourceTests {
         int code = je.getAsJsonObject().get("code").getAsInt();
         String name = je.getAsJsonObject().get("data").getAsJsonObject().get("user").getAsJsonObject().get("name").getAsString();
         Assert.assertEquals(200, code);
-        assertEquals("not_exist", name);
+        assertEquals("not_exist@test.com", name);
         User createUser = userMapper.findUserByName(name);
         Assert.assertNotNull(createUser);
     }

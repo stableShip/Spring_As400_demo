@@ -1,2 +1,2 @@
-insert into user(id, name, password, role)
-values (1, 'admin', '123456', 'test')
+insert into user(name, password, role)
+values ('admin@test.com', '123456', 'test')

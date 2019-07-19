@@ -2,6 +2,7 @@ package com.example.tag.domain;
 
 import lombok.Data;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 
 @Data
@@ -10,12 +11,17 @@ public class User {
     private transient int id;
 
     @NotNull
+    @Email
     private String name;
 
     @NotNull
     private transient String password;
 
     private String role;
+
+    private long createdAt;
+
+    private long updatedAt;
 
     public User() {
         // for param inject
