@@ -35,4 +35,13 @@ public class UserService {
         userMapper.createUser(user);
         return userMapper.findById(user.getId());
     }
+
+    public User[] getAllUsers(User user) {
+        return userMapper.findAll(user);
+    }
+
+    public int deleteUser(User user) {
+        return userMapper.deleteUser(user);
+    }
+
 }

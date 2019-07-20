@@ -1,6 +1,5 @@
 package com.example.tag.util;
 
-import com.hsbc.carm.ha.WebAppComvert;
 import org.docx4j.jaxb.Context;
 import org.docx4j.openpackaging.contenttype.ContentType;
 import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
@@ -32,7 +31,7 @@ public class RTFUtil {
             for (Map<String, byte[]> dataMap : list) {
                 for (String dataKey : dataMap.keySet()) {
                     byte[] bytes = dataMap.get(dataKey);
-                    String newStr = new String(WebAppComvert.getUnicodeString(bytes).getBytes(), "utf-8");
+                    String newStr = bytes.toString();
                     sb.append(newStr);
                 }
             }
@@ -56,7 +55,7 @@ public class RTFUtil {
             for (Map<String, byte[]> dataMap : list) {
                 for (String dataKey : dataMap.keySet()) {
                     byte[] bytes = dataMap.get(dataKey);
-                    String newStr = new String(WebAppComvert.getUnicodeString(bytes).getBytes(), "utf-8");
+                    String newStr = new String();
                     tempFileOut.write(newStr.getBytes("iso-8859-1"));
                 }
             }

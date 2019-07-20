@@ -25,6 +25,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import static org.junit.Assert.assertEquals;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -118,7 +119,7 @@ public class UserResourceTests {
     public void case4_addUser_userExist() throws Exception {
         String user = "{\n" +
                 "  \"token\": \"test\",\n" +
-                "  \"username\": \"test@test.com\",\n" +
+                "  \"name\": \"test@test.com\",\n" +
                 "  \"password\": \"12345\",\n" +
                 "  \"role\": \"atest\"\n" +
                 "}";
@@ -141,7 +142,7 @@ public class UserResourceTests {
     public void case5_addUser_success() throws Exception {
         String user = "{\n" +
                 "  \"token\": \"test\",\n" +
-                "  \"username\": \"not_exist@test.com\",\n" +
+                "  \"name\": \"not_exist@test.com\",\n" +
                 "  \"password\": \"12345\",\n" +
                 "  \"role\": \"atest\"\n" +
                 "}";
@@ -160,5 +161,43 @@ public class UserResourceTests {
         assertEquals("not_exist@test.com", name);
         User createUser = userMapper.findUserByName(name);
         Assert.assertNotNull(createUser);
+    }
+
+    @Test
+    public void case6_getAllUsers_success() throws Exception {
+        String user = "{\"token\": \"test\"}";
+        MvcResult result = this.mockMvc.perform(
+                post("/api/user/users").content(user)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+        )
+                .andExpect(status().isOk())
+                .andReturn();
+        System.out.println(result.getResponse().getContentAsString());
+        JsonElement je = new JsonParser().parse(result.getResponse().getContentAsString());
+        int code = je.getAsJsonObject().get("code").getAsInt();
+        int total = je.getAsJsonObject().get("data").getAsJsonObject().get("total").getAsInt();
+        Assert.assertEquals(200, code);
+        assertEquals(3, total);
+        User[] users = userMapper.findAll(new User());
+        Assert.assertEquals(3, users.length);
+    }
+
+    @Test
+    public void case7_deleteUser_success() throws Exception {
+        String user = "{\"token\": \"test\", \"id\": \"1\"}";
+        MvcResult result = this.mockMvc.perform(
+                delete("/api/user").content(user)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+        )
+                .andExpect(status().isOk())
+                .andReturn();
+        System.out.println(result.getResponse().getContentAsString());
+        JsonElement je = new JsonParser().parse(result.getResponse().getContentAsString());
+        int code = je.getAsJsonObject().get("code").getAsInt();
+        Assert.assertEquals(200, code);
+        User[] users = userMapper.findAll(new User());
+        Assert.assertEquals(2, users.length);
     }
 }

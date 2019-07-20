@@ -20,4 +20,11 @@ public interface UserMapper {
 
     @Select("select * from user where name = #{name}")
     User findUserByName(String name);
+
+
+    @SelectProvider(type = User.class, method = "findAll")
+    User[] findAll(User user);
+
+    @Delete("delete from user where id = #{id}")
+    int deleteUser(User user);
 }
