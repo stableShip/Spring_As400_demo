@@ -39,22 +39,13 @@
             <scope>test</scope>
         </dependency>
 
-        <dependency>
-            <groupId>net.sf.jt400</groupId>
-            <artifactId>jt400-jdk8</artifactId>
-            <version>9.7</version>
-        </dependency>
+
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>com.hsbc.group.risk.wholesalecreditrisk.carm</groupId>
-            <artifactId>carm-ha</artifactId>
-            <version>1.26</version>
-        </dependency>
         <dependency>
             <groupId>org.docx4j</groupId>
             <artifactId>docx4j</artifactId>
@@ -64,11 +55,6 @@
             <groupId>org.mybatis.spring.boot</groupId>
             <artifactId>mybatis-spring-boot-starter</artifactId>
             <version>2.0.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.xerial</groupId>
-            <artifactId>sqlite-jdbc</artifactId>
-            <version>3.27.2</version>
         </dependency>
 
         <dependency>
@@ -93,32 +79,17 @@
             <artifactId>h2</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger-ui</artifactId>
+            <version>2.9.2</version>
+        </dependency>
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger2</artifactId>
+            <version>2.9.2</version>
+        </dependency>
 
-        <dependency>
-            <groupId>org.jodconverter</groupId>
-            <artifactId>jodconverter-local</artifactId>
-            <version>4.2.2</version>
-        </dependency>
-        <dependency>
-            <groupId>org.jodconverter</groupId>
-            <artifactId>jodconverter-core</artifactId>
-            <version>4.2.2</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.artofsolving</groupId>
-            <artifactId>jodconverter</artifactId>
-            <version>1.0</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/src/lib/jodconverter-2.2.2.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>com.artofsolving</groupId>
-            <artifactId>jodconverter-cli</artifactId>
-            <version>1.0</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/src/lib/jodconverter-cli-2.2.2.jar</systemPath>
-        </dependency>
     </dependencies>
 
     <build>

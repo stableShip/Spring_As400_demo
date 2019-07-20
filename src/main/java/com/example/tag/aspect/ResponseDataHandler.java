@@ -5,7 +5,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.web.bind.annotation.ControllerAdvice;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
 import java.util.HashMap;
@@ -22,13 +21,12 @@ public class ResponseDataHandler implements ResponseBodyAdvice {
 
     @Override
     public Object beforeBodyWrite(Object body, MethodParameter methodParameter, MediaType mediaType, Class aClass, ServerHttpRequest serverHttpRequest, ServerHttpResponse serverHttpResponse) {
-        if (methodParameter.hasMethodAnnotation(ExceptionHandler.class)) {
-            return body;
-        } else {
+        if (methodParameter.getDeclaringClass().getName().contains( "com.example.tag.web.rest" )) {
             Map map = new HashMap();
             map.put("code", 200);
             map.put("data", body);
             return map;
         }
+        return body;
     }
 }

@@ -4,6 +4,8 @@ import com.example.tag.domain.User;
 import com.example.tag.servive.UserService;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +18,8 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/user")
 @Slf4j
+
+@Api(value = "管理后台", tags = {"用户管理"})
 public class UserResource {
 
     private final UserService userService;
@@ -25,6 +29,8 @@ public class UserResource {
         this.userService = userService;
     }
 
+
+    @ApiOperation("用户登录")
     @PostMapping("/login")
     public ResponseEntity<Void> login(@RequestBody  @Valid User user) {
         User userInfo = userService.login(user);
@@ -33,13 +39,14 @@ public class UserResource {
         return new ResponseEntity(data, HttpStatus.OK);
     }
 
+    @ApiOperation("获取导航栏")
     @PostMapping("/navigate")
     public ResponseEntity<Void> navigate(@RequestBody @Valid User user) {
         HashMap data = new HashMap();
         return new ResponseEntity(data, HttpStatus.OK);
     }
 
-
+    @ApiOperation("添加用户")
     @PostMapping("/addUser")
     public ResponseEntity<Void> addUser(@RequestBody @Valid User user) {
 
@@ -64,13 +71,22 @@ public class UserResource {
         return new ResponseEntity(data, HttpStatus.OK);
     }
 
-    @DeleteMapping("")
+    @DeleteMapping
     public ResponseEntity<Void> deleteUser(@RequestBody User user) {
         //todo 验证权限
         int userId = userService.deleteUser(user);
         HashMap data = new HashMap();
         data.put("userId", userId);
         return new ResponseEntity(data, HttpStatus.OK);
+    }
+
+    @PutMapping
+    public ResponseEntity<Void> updateUser(@RequestBody User user) {
+        //todo 验证权限
+        int userId = userService.updateUser( user );
+        HashMap data = new HashMap();
+        data.put( "userId", userId );
+        return new ResponseEntity( data, HttpStatus.OK );
     }
 
 }
