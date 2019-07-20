@@ -11,7 +11,7 @@ import javax.sql.DataSource;
 @Configuration
 public class MyBatisConfig {
     @Bean
-    public SqlSessionFactory sqlSessionFactory(@Qualifier("sqliteDataSource") DataSource dataSource) throws Exception {
+    public SqlSessionFactory sqlSessionFactory(@Qualifier("dataSource") DataSource dataSource) throws Exception {
         SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
         sqlSessionFactoryBean.setDataSource(dataSource);
         return sqlSessionFactoryBean.getObject();

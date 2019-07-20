@@ -1,1 +1,1 @@
-insert into user(name, password, role) values ('test@test.com', '123456', 'test');
+insert into user(name, password, role, status) values ('test@test.com', '123456', 'test', 1);

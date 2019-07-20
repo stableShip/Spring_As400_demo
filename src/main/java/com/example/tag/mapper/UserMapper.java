@@ -14,7 +14,7 @@ public interface UserMapper {
     @SelectProvider(type = User.class, method = "findUserByNameAndPwd")
     User findUserByNameAndPwd(User user);
 
-    @Insert("insert into user(name, password, role) values(#{name}, #{password}, #{role})")
+    @Insert("insert into user(name, password, role, status) values(#{name}, #{password}, #{role}, #{status})")
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
     int createUser(User user);
 
@@ -27,4 +27,7 @@ public interface UserMapper {
 
     @Delete("delete from user where id = #{id}")
     int deleteUser(User user);
+
+    @Update("update user set name=#{name}, password=#{password}, status=#{status}, role=#{role} where id = #{id}")
+    int updateUser(User user);
 }

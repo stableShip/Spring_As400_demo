@@ -68,7 +68,7 @@ public class UserResourceTests {
 
     @Test
     @Sql(
-            config = @SqlConfig(dataSource = "sqliteDataSource"),
+            config = @SqlConfig(dataSource = "dataSource"),
             scripts = "/prepareData/com.example.tag.web.rest/UserResourceTests/case2_login_success.sql"
     )
     public void case2_login_success() throws Exception {
@@ -113,7 +113,7 @@ public class UserResourceTests {
 
     @Test
     @Sql(
-            config = @SqlConfig(dataSource = "sqliteDataSource"),
+            config = @SqlConfig(dataSource = "dataSource"),
             scripts = "/prepareData/com.example.tag.web.rest/UserResourceTests/case4_addUser_userExist.sql"
     )
     public void case4_addUser_userExist() throws Exception {
